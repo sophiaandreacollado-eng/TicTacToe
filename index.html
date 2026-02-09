@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body class="flex justify-center items-center h-screen bg-gray-300">
+
+    <div>
+
+
+        <div>
+            <div id="board" class="grid grid-cols-3 gap-3 pl-2 pt-2 space-x-2 space-y-2 v"></div>
+            <h1 class="text-red-600 text-5xl font-bold text-center italic animate-bounce" id="message"></h1>
+        </div>
+
+        <div class="flex justify-center">
+            <button onclick="resetTheGame()"
+                class="text-white text-3xl font-bold  rounded-4xl  text-center  mt-4 bg-green-700 py-6 px-10 cursor-pointer">Restart</button>
+        </div>
+
+
+
+        <script>
+
+            const boardDiv = document.getElementById('board');
+            const message = document.getElementById('message');
+
+            let boardCells = [
+                ["", "", ""],
+                ["", "", ""],
+                ["", "", ""]
+
+            ];
+
+            drawBoard();
+
+            function drawBoard() {
+
+                let boardBox = "";
+
+                for (row = 0; row < boardCells.length; row++) {
+                    for (col = 0; col < boardCells[row].length; col++) {
+                        if (boardCells[row][col] === "X") {
+                            boardBox += createXCellHtml(row, col);
+                        } else if (boardCells[row][col] === "O") {
+                            boardBox += createOCellHtml(row, col);
+                        } else {
+                            boardBox += createBlankCellHtml(row, col);
+                        }
+                    }
+                }
+
+                boardDiv.innerHTML = boardBox;
+            }
+
+            let currentPlayer = "X";
+            message.innerHTML = "Player X's turn";
+
+            function cellClicked(row, col) {
+                if (boardCells[row][col] === "") {
+                    boardCells[row][col] = currentPlayer;
+                    if (isWinner(currentPlayer)) {
+                        message.innerHTML = `Player ${currentPlayer} wins!`;
+
+                    } else {
+
+                        if (currentPlayer === 'X') {
+                            currentPlayer = 'O';
+                            message.innerHTML = `${currentPlayer}'s turn `;
+                        } else {
+
+                            currentPlayer = 'X';
+                            message.innerHTML = `${currentPlayer}'s turn`;
+
+                        }
+
+                    }
+                }
+                drawBoard();
+            }
+            function isWinner(user) {
+
+                // for rows
+                for (let row = 0; row < boardCells.length; row++) {
+                    if (boardCells[row][0] == user
+                        && boardCells[row][1] == user
+                        && boardCells[row][2] == user) {
+                        return true;
+                    }
+                }
+                // for columns 
+                for (let col = 0; col < 3; col++) {
+                    if (boardCells[0][col] == user
+                        && boardCells[1][col] == user
+                        && boardCells[2][col] == user) {
+                        return true;
+                    }
+                }
+
+                // for diagonal
+                if (boardCells[0][0] == user
+                    && boardCells[1][1] == user
+                    && boardCells[2][2] == user) {
+                    return true;
+
+                }
+
+                if (boardCells[0][2] == user
+                    && boardCells[1][1] == user
+                    && boardCells[2][0] == user) {
+                    return true;
+                }
+                return false;
+
+            }
+
+            function resetTheGame() {
+                boardCells = [
+                    ["", "", ""],
+                    ["", "", ""],
+                    ["", "", ""]
+
+                ];
+                drawBoard();
+                messageDiv.textContent = "Let's Play!";
+                boardDiv.style.pointerEvents = "auto";
+            }
+
+
+            function createXCellHtml(row, col) {
+                return `
+            
+            <div onclick="cellClicked(${row}, ${col})" class="flex items-center justify-center w-50 h-50 text-8xl font-bold bg-purple-400 rounded-xl cursor-pointer shadow-md ">X
+                </div>
+            
+            `;
+            }
+
+
+            function createOCellHtml(row, col) {
+
+                return `
+            
+            <div onclick="cellClicked(${row}, ${col})" class="flex items-center justify-center  w-50 h-50 text-8xl font-bold bg-purple-400 rounded-xl cursor-pointer shadow-md">O
+                </div>
+            
+            `;
+            }
+
+            function createBlankCellHtml(row, col) {
+
+                return `
+            
+            <div onclick="cellClicked(${row}, ${col})" class="flex items-center justify-center w-50 h-50 text-8xl font-bold bg-purple-400 rounded-xl cursor-pointer shadow-md">
+            
+                </div>
+            
+            `;
+
+            }
+
+
+
+
+        </script>
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
